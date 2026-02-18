@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colors */
+  --bg-warm: #FAF9F6;
+  --bg-dark: #1C1915;
+  --accent: #FF774D;
+  --accent-hover: #E5673F;
+  --text-primary: #1A1A1A;
+  --text-muted: #6B6B6B;
+  --text-light: #FAF9F6;
+  --border-light: #E5E5E5;
+  --border-dark: #333333;
+  --card-light: #FFFFFF;
+  --card-dark: #2A2A2A;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg-warm: var(--bg-warm);
+  --color-bg-dark: var(--bg-dark);
+  --color-accent: #FF774D;
+  --color-accent-hover: #E5673F;
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-text-light: var(--text-light);
+  --color-border-light: var(--border-light);
+  --color-border-dark: var(--border-dark);
+  --color-card-light: var(--card-light);
+  --color-card-dark: var(--card-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  background: var(--bg-warm);
+  color: var(--text-primary);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Dot grid background texture */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, #d4d4d4 0.75px, transparent 0.75px);
+  background-size: 24px 24px;
+}
+
+.bg-dot-grid-dark {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.07) 0.75px, transparent 0.75px);
+  background-size: 24px 24px;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card hover image reveal */
+.card-image {
+  opacity: 0;
+  transform: scale(1.1);
+  transition: opacity 0.4s ease, transform 0.6s ease;
+}
+
+.card:hover .card-image {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Card selection animation */
+.card-selected {
+  animation: cardPulse 0.3s ease-out;
+}
+
+@keyframes cardPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Smooth pan animation */
+.card-grid {
+  transition: transform 0.15s ease-out;
+}
+
+/* Loading animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
