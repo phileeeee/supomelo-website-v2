@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 :root {
+  /* Fonts */
+  --font-satoshi: 'Satoshi', system-ui, -apple-system, sans-serif;
   /* Colors */
   --bg-warm: #FAF9F6;
   --bg-dark: #1C1915;
@@ -51,13 +53,13 @@ body {
 body {
   background: var(--bg-warm);
   color: var(--text-primary);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-satoshi), system-ui, -apple-system, sans-serif;
 }
 
 /* Dot grid background texture */
 .bg-dot-grid {
-  background-image: radial-gradient(circle, #d4d4d4 0.75px, transparent 0.75px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.12) 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
 }
 
 .bg-dot-grid-dark {

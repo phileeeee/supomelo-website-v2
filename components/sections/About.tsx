@@ -1,11 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import SlotCounter from '../ui/SlotCounter';
 
 const stats = [
-  { number: '16+', label: 'years of design experience' },
-  { number: '100%', label: 'embedded in your workflow' },
-  { number: '24hr', label: 'response time' },
+  { number: 16, suffix: '+', label: 'years of design experience' },
+  { number: 100, suffix: '%', label: 'embedded in your workflow' },
+  { number: 24, suffix: 'hr', label: 'response time' },
 ];
 
 const fadeInUp = {
@@ -78,7 +79,7 @@ export default function About() {
                   />
                 </svg>
                 <span className="text-4xl md:text-5xl font-bold text-text-primary">
-                  {stat.number}
+                  <SlotCounter end={stat.number} suffix={stat.suffix} duration={2} />
                 </span>
               </div>
               <p className="text-text-muted">{stat.label}</p>

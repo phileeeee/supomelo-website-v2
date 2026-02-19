@@ -43,7 +43,7 @@ export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
               transition={{ duration: 0.6, delay: 0.5 }}
               className="absolute inset-0 flex flex-col items-center justify-center px-8 gap-6"
             >
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-medium text-white text-center leading-tight max-w-4xl">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-medium font-mono text-white text-center leading-tight max-w-4xl">
                 From seed to scale.
                 <br />
                 Design that helps startups flourish.
@@ -87,13 +87,38 @@ export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
                             />
                           </div>
                         ) : (
-                          <div className="w-full h-1.5 rounded-full border border-white/20" />
+                          <motion.button
+                            whileHover="hovered"
+                            initial="idle"
+                            onClick={() => {
+                              const el = document.getElementById('contact');
+                              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }}
+                            className="w-full flex flex-col items-center gap-1 cursor-pointer"
+                          >
+                            <div className="relative w-full h-1.5">
+                              <div className="absolute inset-0 rounded-full border border-white/20" />
+                              <motion.div
+                                className="absolute inset-0 rounded-full bg-white/80"
+                                variants={{ idle: { scaleX: 0 }, hovered: { scaleX: 1 } }}
+                                transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                                style={{ transformOrigin: 'left' }}
+                              />
+                            </div>
+                            <motion.span
+                              variants={{ idle: { opacity: 0.4 }, hovered: { opacity: 0.7 } }}
+                              transition={{ duration: 0.2 }}
+                              className="text-[9px] md:text-[10px] font-mono text-white"
+                            >
+                              {month}
+                            </motion.span>
+                          </motion.button>
                         )}
-                        <span className={`text-[9px] md:text-[10px] font-mono ${
-                          isFilled ? 'text-white/60' : 'text-white/40'
-                        }`}>
-                          {month}
-                        </span>
+                        {isFilled && (
+                          <span className="text-[9px] md:text-[10px] font-mono text-white/60">
+                            {month}
+                          </span>
+                        )}
                       </div>
                     );
                   })}

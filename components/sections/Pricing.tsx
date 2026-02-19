@@ -65,7 +65,7 @@ export default function Pricing() {
           <h2 className="text-3xl md:text-4xl lg:text-[44px] font-bold text-text-primary mt-6 mb-6 leading-tight">
             No guesswork on pricing,
             <br />
-            we charge $22k/mo.
+            we charge $28k/mo.
           </h2>
         </motion.div>
 

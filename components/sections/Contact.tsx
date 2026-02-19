@@ -116,7 +116,7 @@ Looking forward to hearing from you!`;
             onSubmit={handleSubmit}
             className="max-w-2xl"
           >
-            <div className="text-xl md:text-2xl text-text-primary leading-relaxed space-y-4">
+            <div className="text-base md:text-lg text-text-primary leading-relaxed space-y-4">
               <p className="flex flex-wrap items-center gap-2">
                 <span>My name is</span>
                 <input

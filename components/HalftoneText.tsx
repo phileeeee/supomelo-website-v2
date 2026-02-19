@@ -11,7 +11,7 @@ interface HalftoneTextProps {
 export default function HalftoneText({
   text,
   dotColor = '#FF774D',
-  spacing = 16,
+  spacing = 12,
 }: HalftoneTextProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -44,7 +44,6 @@ export default function HalftoneText({
       offCtx.fillStyle = '#000000';
       offCtx.fillRect(0, 0, w, h);
 
-      // Scale font size to fill canvas width
       let fontSize = h * 0.8;
       offCtx.font = `bold ${fontSize}px 'Geist Mono', monospace`;
       const measured = offCtx.measureText(text).width;
@@ -58,11 +57,42 @@ export default function HalftoneText({
 
       const imgData = offCtx.getImageData(0, 0, w, h);
 
-      // --- Draw halftone dots ---
+      // --- Compute Manhattan distance field ---
+      // Each pixel value = distance to the nearest background (edge) pixel
+      const INF = 9999;
+      const dist = new Float32Array(w * h);
+
+      for (let i = 0; i < w * h; i++) {
+        dist[i] = imgData.data[i * 4] > 128 ? INF : 0;
+      }
+
+      // Forward pass: top-left → bottom-right
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          if (dist[y * w + x] === 0) continue;
+          const top  = y > 0 ? dist[(y - 1) * w + x] + 1 : INF;
+          const left = x > 0 ? dist[y * w + (x - 1)] + 1 : INF;
+          dist[y * w + x] = Math.min(dist[y * w + x], top, left);
+        }
+      }
+
+      // Backward pass: bottom-right → top-left
+      for (let y = h - 1; y >= 0; y--) {
+        for (let x = w - 1; x >= 0; x--) {
+          if (dist[y * w + x] === 0) continue;
+          const bottom = y < h - 1 ? dist[(y + 1) * w + x] + 1 : INF;
+          const right  = x < w - 1 ? dist[y * w + (x + 1)] + 1 : INF;
+          dist[y * w + x] = Math.min(dist[y * w + x], bottom, right);
+        }
+      }
+
+      // --- Draw halftone dots scaled by distance from edge ---
       ctx.fillStyle = dotColor;
 
+      const maxR = spacing * 0.52;
       const cols = Math.ceil(w / spacing) + 1;
       const rows = Math.ceil(h / spacing) + 1;
+      const eased = 1 - Math.pow(1 - progress, 3);
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -71,15 +101,12 @@ export default function HalftoneText({
 
           const px = Math.min(w - 1, Math.floor(x));
           const py = Math.min(h - 1, Math.floor(y));
-          const idx = (py * w + px) * 4;
-          const brightness = imgData.data[idx]; // 255 = white = ink area
+          const d = dist[py * w + px];
 
-          const maxR = spacing * 0.52;
-          const targetR = maxR * (brightness / 255);
+          if (d === 0) continue; // outside letter — no dot
 
-          // Ease out cubic
-          const eased = 1 - Math.pow(1 - progress, 3);
-          const r = targetR * eased;
+          // Radius grows with distance from edge, capped at maxR
+          const r = Math.min(maxR, d * 0.7) * eased;
 
           if (r < 0.3) continue;
 
@@ -103,7 +130,6 @@ export default function HalftoneText({
       rafRef = requestAnimationFrame(tick);
     };
 
-    // Trigger animation when footer scrolls into view
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !hasAnimated) {
@@ -115,11 +141,9 @@ export default function HalftoneText({
     );
     observer.observe(canvas);
 
-    // Draw static (invisible) frame on load so canvas has correct size
     const init = () => drawHalftone(0);
     document.fonts.ready.then(init);
 
-    // Redraw on resize
     const ro = new ResizeObserver(() => {
       drawHalftone(hasAnimated ? 1 : 0);
     });

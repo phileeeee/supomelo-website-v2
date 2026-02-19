@@ -1,15 +1,13 @@
-import BreathingDotGrid from '../BreathingDotGrid';
 import HalftoneText from '../HalftoneText';
 
 export default function Footer() {
   return (
     <footer className="relative bg-bg-warm min-h-[60vh] flex flex-col overflow-hidden">
-      <BreathingDotGrid dotColor="#FF774D" spacing={28} baseRadius={1} />
 
       {/* Large wordmark */}
       <div className="flex-1 flex items-end overflow-hidden">
         <div className="w-full max-w-[1200px] mx-auto px-6 lg:px-12 pb-24">
-          <HalftoneText text="supomelo" dotColor="#FF774D" spacing={16} />
+          <HalftoneText text="supomelo" dotColor="#FF774D" spacing={7} />
         </div>
       </div>
 

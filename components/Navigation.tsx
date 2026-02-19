@@ -186,8 +186,8 @@ export default function Navigation({ isVisible, onNavClick, onLogoClick }: Navig
               </motion.div>
               <span className={
                 isPill
-                  ? 'text-sm font-medium text-text-primary whitespace-nowrap'
-                  : 'text-xl font-bold text-white whitespace-nowrap lowercase'
+                  ? 'text-sm font-medium text-text-primary whitespace-nowrap lowercase'
+                  : 'text-xl font-medium text-white whitespace-nowrap lowercase'
               }>
                 supomelo
               </span>

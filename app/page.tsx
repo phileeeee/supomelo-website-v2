@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import LoadingSplash from '@/components/LoadingSplash';
 import ExpandedCard from '@/components/ExpandedCard';
 import Navigation from '@/components/Navigation';
@@ -17,15 +18,6 @@ type Phase = 'splash' | 'expanded';
 export default function Home() {
   const [phase, setPhase] = useState<Phase>('splash');
   const contentCardRef = useRef<HTMLDivElement>(null);
-
-  // Splash for 2 seconds, then go directly to expanded
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setPhase('expanded');
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   // Toggle body overflow based on phase
   useEffect(() => {
@@ -52,7 +44,9 @@ export default function Home() {
   return (
     <main className="relative bg-bg-warm min-h-screen">
       {/* Splash screen */}
-      <LoadingSplash isVisible={phase === 'splash'} />
+      <AnimatePresence>
+        {phase === 'splash' && <LoadingSplash onEnter={() => setPhase('expanded')} />}
+      </AnimatePresence>
 
       {phase === 'expanded' && (
         <>
