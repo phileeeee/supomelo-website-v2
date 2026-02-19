@@ -61,7 +61,7 @@ export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
               className="absolute bottom-8 left-0 right-0 px-6 md:px-12"
             >
               <div className="max-w-md mx-auto scale-[1.2]">
-                <p className="text-[11px] font-mono text-white/50 uppercase tracking-widest mb-2 text-center">
+                <p className="text-[11px] font-mono text-white uppercase tracking-widest mb-2 text-center">
                   2026 Availability
                 </p>
                 <div className="flex gap-[3px] md:gap-1">
@@ -106,7 +106,7 @@ export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
                               />
                             </div>
                             <motion.span
-                              variants={{ idle: { opacity: 0.4 }, hovered: { opacity: 0.7 } }}
+                              variants={{ idle: { opacity: 0.7 }, hovered: { opacity: 1 } }}
                               transition={{ duration: 0.2 }}
                               className="text-[9px] md:text-[10px] font-mono text-white"
                             >
@@ -115,7 +115,7 @@ export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
                           </motion.button>
                         )}
                         {isFilled && (
-                          <span className="text-[9px] md:text-[10px] font-mono text-white/60">
+                          <span className="text-[9px] md:text-[10px] font-mono text-white">
                             {month}
                           </span>
                         )}
