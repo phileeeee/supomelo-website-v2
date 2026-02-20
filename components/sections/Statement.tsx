@@ -79,7 +79,7 @@ export default function Statement() {
       {/* Client Type Toggle - Cloud Background */}
       <div
         className="py-16 lg:py-20 bg-center relative"
-        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1770030190302-4e5a9fd831bb?w=1920&q=80&fit=crop)', backgroundSize: '160%' }}
+        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1770030190302-4e5a9fd831bb?w=1920&q=80&fit=crop)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/20" />
