@@ -171,8 +171,8 @@ export default function Contact() {
             className="w-full"
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-            {/* Left column — form fields */}
-            <div className="text-base md:text-lg text-text-primary leading-relaxed space-y-4">
+            {/* Form fields — right on desktop */}
+            <div className="text-base md:text-lg text-text-primary leading-relaxed space-y-4 lg:order-last">
               <p className="flex flex-wrap items-center gap-2">
                 <span>My name is</span>
                 <input
@@ -320,8 +320,8 @@ export default function Contact() {
               )}
             </div>
 
-            {/* Right column — description */}
-            <div className="flex flex-col gap-4">
+            {/* Description — left on desktop */}
+            <div className="flex flex-col gap-4 lg:order-first">
               <div>
                 <p className="text-base md:text-lg text-text-primary mb-3">
                   Tell us a bit about your project
