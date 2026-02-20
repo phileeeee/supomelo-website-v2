@@ -80,6 +80,9 @@ export default function Statement() {
         className="py-16 lg:py-20 bg-center relative"
         style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1770030190302-4e5a9fd831bb?w=1920&q=80&fit=crop)', backgroundSize: '160%' }}
       >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/20" />
+
         <div className="relative z-10 max-w-[1200px] mx-auto px-6 lg:px-12">
           <motion.p
             initial={{ opacity: 0, y: 20 }}

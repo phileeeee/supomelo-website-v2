@@ -227,11 +227,11 @@ export default function Navigation({ isVisible, onNavClick, onLogoClick }: Navig
                       : 'group relative z-10 text-sm cursor-pointer whitespace-nowrap py-1'
                   }
                 >
-                  <div className="relative overflow-hidden">
-                    <span className={`block transition-transform duration-300 group-hover:-translate-y-full ${isPill ? 'text-text-primary' : 'text-white'}`}>
+                  <div className="relative overflow-hidden px-0.5">
+                    <span className={`block font-normal transition-transform duration-300 group-hover:-translate-y-full ${isPill ? 'text-text-primary' : 'text-white'}`}>
                       {link.label}
                     </span>
-                    <span className={`absolute top-full left-0 block transition-transform duration-300 group-hover:-translate-y-full ${isPill ? 'text-text-muted' : 'text-white/60'}`}>
+                    <span className={`absolute top-full left-0 block font-medium transition-transform duration-300 group-hover:-translate-y-full ${isPill ? 'text-black' : 'text-white/60'}`}>
                       {link.label}
                     </span>
                   </div>

@@ -49,7 +49,7 @@ export default function About() {
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
           variants={fadeInUp}
-          className="text-lg text-text-muted max-w-2xl mb-12"
+          className="text-lg text-text-muted max-w-2xl mb-20"
         >
           We drive design projects from wireframe to full release alongside your
           engineers. Embedded in your team, not outside it.
