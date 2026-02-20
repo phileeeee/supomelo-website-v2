@@ -28,6 +28,7 @@ export default function Contact() {
     email: '',
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
@@ -71,25 +72,38 @@ export default function Contact() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) {
-      const subject = `New enquiry from ${formData.name} at ${formData.company}`;
-      const fullMonth = selectedMonth ? monthMap[selectedMonth] || selectedMonth : '';
-      const monthLine = fullMonth ? `\n\nI'm interested in booking ${fullMonth} 2026.` : '';
-      const body = `Hi Supomelo,
+    if (!validateForm()) return;
 
-My name is ${formData.name} from ${formData.company}.${monthLine}
+    setIsSubmitting(true);
+    const fullMonth = selectedMonth ? monthMap[selectedMonth] || selectedMonth : '';
 
-I want to chat about designs for my: ${formData.projectTypes.join(', ')}
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: '79f71988-8c6f-4553-aaf7-ef3b0b8ef1ca',
+          subject: `New enquiry from ${formData.name} at ${formData.company}`,
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          ...(fullMonth && { availability: `${fullMonth} 2026` }),
+          project_types: formData.projectTypes.join(', '),
+        }),
+      });
 
-You can reach me at: ${formData.email}
-
-Looking forward to hearing from you!`;
-
-      const mailtoLink = `mailto:supomelo.studio@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailtoLink;
-      setIsSubmitted(true);
+      const data = await res.json();
+      if (data.success) {
+        setIsSubmitted(true);
+      } else {
+        setErrors({ submit: 'Something went wrong. Please try again.' });
+      }
+    } catch {
+      setErrors({ submit: 'Something went wrong. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -296,18 +310,19 @@ Looking forward to hearing from you!`;
 
             {Object.keys(errors).length > 0 && (
               <p className="text-red-400 text-sm mt-4">
-                Please fill in all fields correctly.
+                {errors.submit || 'Please fill in all fields correctly.'}
               </p>
             )}
 
             <div className="mt-10">
               <motion.button
                 type="submit"
-                className="group inline-flex items-center gap-3 bg-white text-text-primary border border-gray-200 rounded-full pl-6 pr-2 py-2 font-medium transition-all duration-300 hover:bg-text-primary hover:text-white hover:border-text-primary"
+                disabled={isSubmitting}
+                className="group inline-flex items-center gap-3 bg-white text-text-primary border border-gray-200 rounded-full pl-6 pr-2 py-2 font-medium transition-all duration-300 hover:bg-text-primary hover:text-white hover:border-text-primary disabled:opacity-60 disabled:cursor-not-allowed"
                 whileTap={{ scale: 0.98 }}
               >
                 <span className="text-base font-medium transition-colors duration-300">
-                  Send message
+                  {isSubmitting ? 'Sending…' : 'Send message'}
                 </span>
                 <span className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#FF774D] overflow-hidden">
                   <svg
