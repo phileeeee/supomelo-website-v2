@@ -19,7 +19,7 @@ export default function SlotCounter({
   duration = 1,
 }: SlotCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const isInView = useInView(ref, { once: false, margin: '-50px' });
   const [displayValue, setDisplayValue] = useState('0');
 
   useEffect(() => {

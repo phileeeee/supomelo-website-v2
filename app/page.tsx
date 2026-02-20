@@ -64,7 +64,7 @@ export default function Home() {
 
             {/* Sections */}
             <About />
-            <Work />
+            {/* <Work /> */}
             <Services />
             <Statement />
             <Pricing />

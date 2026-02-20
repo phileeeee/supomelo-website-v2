@@ -99,15 +99,21 @@ export default function Navigation({ isVisible, onNavClick, onLogoClick }: Navig
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    if (onNavClick) {
-      onNavClick(href);
-    } else {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    e.stopPropagation();
+    console.log('Nav click:', href);
+    setIsMobileMenuOpen(false);
+
+    setTimeout(() => {
+      if (onNavClick) {
+        onNavClick(href);
+      } else {
+        const element = document.querySelector(href);
+        console.log('Element found:', element);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
-    }
-    setTimeout(() => setIsMobileMenuOpen(false), 50);
+    }, 100);
   };
 
   const handleLogoClick = () => {
@@ -266,94 +272,115 @@ export default function Navigation({ isVisible, onNavClick, onLogoClick }: Navig
       </AnimatePresence>
 
       {/* Mobile Menu Pill */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center md:hidden pointer-events-none">
+      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center md:hidden p-4 pointer-events-none">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
-            borderRadius: isPill ? (isMobileMenuOpen ? 20 : 9999) : 0,
-            marginTop: isPill ? 20 : 0,
+            marginTop: isPill ? 16 : 0,
           }}
           transition={{
             opacity: { duration: 0.4, delay: 0.3 },
-            borderRadius: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
             marginTop: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
           }}
-          className="bg-bg-warm backdrop-blur-md border border-border-light shadow-lg shadow-black/5 overflow-hidden pointer-events-auto"
+          className="w-full bg-bg-warm/95 backdrop-blur-md border border-border-light shadow-lg shadow-black/5 overflow-hidden pointer-events-auto rounded-xl"
         >
           {/* Header row: logo + supomelo + hamburger/close */}
-          <div className="flex items-center gap-2 px-5 py-2.5">
+          <div className="flex items-center justify-between gap-2 px-5 py-3">
             <button
-              onClick={() => {
-                if (isMobileMenuOpen) {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                  setTimeout(() => setIsMobileMenuOpen(false), 100);
-                } else {
-                  setIsMobileMenuOpen(true);
-                }
-              }}
-              className="flex items-center gap-2 cursor-pointer"
+              onClick={handleLogoClick}
+              onMouseEnter={startLogoSpin}
+              onMouseLeave={stopLogoSpin}
+              className="flex items-center gap-2.5 cursor-pointer"
             >
-              <Image
-                src="/s-logo-dark.png"
-                alt=""
-                width={16}
-                height={16}
-                className="w-4 h-4"
-              />
-              <span className="text-sm font-medium text-text-primary">
+              <motion.div
+                style={{ rotate: logoRotation }}
+                className="w-6 h-6 shrink-0"
+              >
+                <Image
+                  src="/s-logo-dark.png"
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
+              </motion.div>
+              <span className="text-lg font-medium text-text-primary lowercase">
                 supomelo
               </span>
             </button>
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-4 h-3 relative ml-1 flex flex-col justify-between cursor-pointer"
+              className="w-6 h-5 relative flex flex-col justify-center items-center cursor-pointer"
               aria-label="Toggle menu"
             >
-              <span
-                className={`w-full h-[1.5px] bg-text-primary transition-all duration-300 origin-center ${
-                  isMobileMenuOpen ? 'rotate-45 translate-y-[5.25px]' : ''
-                }`}
+              <motion.span
+                animate={{
+                  rotate: isMobileMenuOpen ? 45 : 0,
+                  y: isMobileMenuOpen ? 0 : -5,
+                }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute w-full h-[1.5px] bg-text-primary rounded-full"
               />
-              <span
-                className={`w-full h-[1.5px] bg-text-primary transition-all duration-300 ${
-                  isMobileMenuOpen ? 'opacity-0 scale-0' : ''
-                }`}
+              <motion.span
+                animate={{
+                  opacity: isMobileMenuOpen ? 0 : 1,
+                  scale: isMobileMenuOpen ? 0 : 1,
+                }}
+                transition={{ duration: 0.2 }}
+                className="absolute w-full h-[1.5px] bg-text-primary rounded-full"
               />
-              <span
-                className={`w-full h-[1.5px] bg-text-primary transition-all duration-300 origin-center ${
-                  isMobileMenuOpen ? '-rotate-45 -translate-y-[5.25px]' : ''
-                }`}
+              <motion.span
+                animate={{
+                  rotate: isMobileMenuOpen ? -45 : 0,
+                  y: isMobileMenuOpen ? 0 : 5,
+                }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute w-full h-[1.5px] bg-text-primary rounded-full"
               />
             </button>
           </div>
 
-          {/* Expandable menu items */}
-          {isMobileMenuOpen && (
-            <div className="flex flex-col items-center px-8 pb-4 gap-0">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const target = document.querySelector(link.href);
-                    if (target) {
-                      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                    setTimeout(() => setIsMobileMenuOpen(false), 100);
-                  }}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-medium text-text-muted active:text-text-primary"
-                >
-                  {activeSection === link.id && (
-                    <span className="w-1.5 h-1.5 bg-accent rounded-full" />
-                  )}
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          )}
+          {/* Expandable menu items with smooth animation */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden"
+              >
+                <div className="flex flex-col px-5 pb-4 pt-2 border-t border-border-light pointer-events-auto">
+                  {navLinks.map((link, index) => (
+                    <motion.a
+                      key={link.label}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: index * 0.05,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      href={link.href}
+                      onClick={(e) => handleNavClick(e, link.href)}
+                      className="flex items-center gap-2 py-3 text-base font-medium text-text-primary hover:text-accent transition-colors cursor-pointer"
+                    >
+                      {activeSection === link.id && (
+                        <motion.span
+                          layoutId="mobile-dot"
+                          className="w-1.5 h-1.5 bg-accent rounded-full"
+                        />
+                      )}
+                      {link.label}
+                    </motion.a>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </div>
     </>

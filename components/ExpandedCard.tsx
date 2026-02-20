@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const HERO_IMAGE = 'https://images.unsplash.com/photo-1604079628040-94301bb21b91?w=1200&q=80';
@@ -10,6 +11,7 @@ interface ExpandedCardProps {
 }
 
 export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
+  const [hoveredMonth, setHoveredMonth] = useState<number | null>(null);
   return (
     <AnimatePresence>
       {isExpanded && (
@@ -29,7 +31,7 @@ export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="absolute inset-0 bg-cover bg-center scale-125 md:scale-100"
+              className="absolute inset-0 bg-cover bg-center scale-150 md:scale-125"
               style={{ backgroundImage: `url(${HERO_IMAGE})` }}
             />
 
@@ -60,39 +62,70 @@ export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
               transition={{ duration: 0.5, delay: 0.8 }}
               className="absolute bottom-8 left-0 right-0 px-6 md:px-12"
             >
-              <div className="max-w-md mx-auto scale-[1.2]">
-                <p className="text-[11px] font-mono text-white uppercase tracking-widest mb-2 text-center">
+              <div className="max-w-md mx-auto md:scale-[1.2]">
+                <p className="text-[11px] font-mono text-white uppercase tracking-widest mb-8 md:mb-6 text-center">
                   2026 Availability
                 </p>
-                <div className="flex gap-[3px] md:gap-1">
+                <div className="grid grid-cols-6 gap-x-[3px] gap-y-10 md:flex md:gap-1">
                   {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map((month, i) => {
                     const isFilled = i < 3;
+                    const isHovered = hoveredMonth === i;
+                    const isSecondRow = i >= 6; // Jul-Dec
                     return (
-                      <div key={month} className="flex-1 flex flex-col items-center gap-1">
+                      <div
+                        key={month}
+                        className={`flex-1 flex flex-col items-center gap-1 relative ${isSecondRow ? 'hidden md:flex' : ''}`}
+                        onMouseEnter={() => setHoveredMonth(i)}
+                        onMouseLeave={() => setHoveredMonth(null)}
+                      >
+                        {/* Label - "Full" or "Book" (always visible on mobile, hover on desktop) */}
+                        <span className="absolute -top-5 text-[9px] md:text-[10px] font-mono text-white tracking-wide md:hidden">
+                          {isFilled ? 'Full' : 'Book'}
+                        </span>
+                        <motion.span
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{
+                            opacity: isHovered ? 1 : 0,
+                            y: isHovered ? 0 : 5
+                          }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute -top-5 text-[10px] font-mono text-white tracking-wide hidden md:block"
+                        >
+                          {isFilled ? 'Full' : 'Book'}
+                        </motion.span>
+
                         {isFilled ? (
-                          <div className="relative w-full h-1.5">
-                            {/* Empty track */}
-                            <div className="absolute inset-0 rounded-full border border-white/20" />
-                            {/* Fill bar — scales in from left, staggered per month */}
-                            <motion.div
-                              className="absolute inset-0 rounded-full bg-white/80"
-                              initial={{ scaleX: 0 }}
-                              animate={{ scaleX: 1 }}
-                              transition={{
-                                duration: 0.5,
-                                delay: 1.0 + i * 0.35,
-                                ease: [0.25, 0.1, 0.25, 1],
-                              }}
-                              style={{ transformOrigin: 'left' }}
-                            />
+                          <div className="w-full flex flex-col items-center gap-1 cursor-default">
+                            <div className="relative w-full h-1.5">
+                              {/* Empty track */}
+                              <div className="absolute inset-0 rounded-full border border-white/20" />
+                              {/* Fill bar — scales in from left, staggered per month */}
+                              <motion.div
+                                className="absolute inset-0 rounded-full bg-white/80"
+                                initial={{ scaleX: 0 }}
+                                animate={{ scaleX: 1 }}
+                                transition={{
+                                  duration: 0.5,
+                                  delay: 1.0 + i * 0.35,
+                                  ease: [0.25, 0.1, 0.25, 1],
+                                }}
+                                style={{ transformOrigin: 'left' }}
+                              />
+                            </div>
+                            <span className="text-[9px] md:text-[10px] font-mono text-white">
+                              {month}
+                            </span>
                           </div>
                         ) : (
                           <motion.button
                             whileHover="hovered"
                             initial="idle"
                             onClick={() => {
-                              const el = document.getElementById('contact');
-                              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              window.location.hash = `contact?month=${month}`;
+                              setTimeout(() => {
+                                const el = document.getElementById('contact');
+                                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }, 100);
                             }}
                             className="w-full flex flex-col items-center gap-1 cursor-pointer"
                           >
@@ -113,11 +146,6 @@ export default function ExpandedCard({ isExpanded }: ExpandedCardProps) {
                               {month}
                             </motion.span>
                           </motion.button>
-                        )}
-                        {isFilled && (
-                          <span className="text-[9px] md:text-[10px] font-mono text-white">
-                            {month}
-                          </span>
                         )}
                       </div>
                     );

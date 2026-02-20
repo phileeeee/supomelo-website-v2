@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import SlotCounter from '../ui/SlotCounter';
 
 const stats = [
@@ -64,49 +65,23 @@ export default function About() {
         >
           {stats.map((stat, index) => (
             <div key={index} className="text-left md:text-center">
-              <div className="flex items-center gap-3 justify-start md:justify-center mb-2">
-                <svg
-                  className="w-5 h-5 text-text-muted"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    d="M5 12h14M12 5l7 7-7 7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+              <div className="flex items-baseline gap-3 justify-start md:justify-center mb-2">
+                <div className="relative inline-flex items-baseline gap-3">
+                  <Image
+                    src="/Accented Arrow.png"
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="w-5 h-5 object-contain self-end mb-2 md:mb-3"
                   />
-                </svg>
-                <span className="text-4xl md:text-5xl font-bold text-text-primary">
-                  <SlotCounter end={stat.number} suffix={stat.suffix} duration={2} />
-                </span>
+                  <span className="text-4xl md:text-5xl font-bold text-text-primary inline-block min-w-[85px] md:min-w-[120px]">
+                    <SlotCounter end={stat.number} suffix={stat.suffix} duration={2} />
+                  </span>
+                </div>
               </div>
               <p className="text-text-muted">{stat.label}</p>
             </div>
           ))}
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          variants={fadeInUp}
-        >
-          <a
-            href="#contact"
-            className="group inline-flex items-center gap-3 bg-white text-text-primary border border-gray-200 rounded-full pl-6 pr-2 py-2 font-medium transition-all duration-300 hover:bg-text-primary hover:text-white hover:border-text-primary"
-          >
-            Get in touch
-            <span className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#FF774D] overflow-hidden">
-              <svg className="w-5 h-5 text-white transition-transform duration-300 ease-out group-hover:translate-x-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <svg className="absolute w-5 h-5 text-white -translate-x-10 transition-transform duration-300 ease-out group-hover:translate-x-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-          </a>
         </motion.div>
       </div>
     </section>

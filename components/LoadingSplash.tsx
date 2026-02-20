@@ -52,8 +52,10 @@ export default function LoadingSplash({ onEnter }: LoadingSplashProps) {
     const dpr = window.devicePixelRatio || 1;
 
     const buildGrid = () => {
-      const W = window.innerWidth;
-      const H = window.innerHeight;
+      // Account for padding (32px mobile, 48px desktop on each side)
+      const padding = window.innerWidth >= 768 ? 48 : 32;
+      const W = window.innerWidth - padding * 2;
+      const H = window.innerHeight - padding * 2;
       canvas.width = W * dpr;
       canvas.height = H * dpr;
       canvas.style.width = W + 'px';
@@ -61,7 +63,7 @@ export default function LoadingSplash({ onEnter }: LoadingSplashProps) {
       const cols = Math.ceil(W / SPACING) + 1;
       const rows = Math.ceil(H / SPACING) + 1;
       const offX = (W - (cols - 1) * SPACING) / 2;
-      const offY = 0;
+      const offY = (H - (rows - 1) * SPACING) / 2;
 
       dotsRef.current = [];
       for (let r = 0; r < rows; r++) {
@@ -199,10 +201,16 @@ export default function LoadingSplash({ onEnter }: LoadingSplashProps) {
     buildGrid();
     draw();
 
-    const onMove = (e: MouseEvent) => { mouseRef.current = { x: e.clientX, y: e.clientY }; };
+    const onMove = (e: MouseEvent) => {
+      const padding = window.innerWidth >= 768 ? 48 : 32;
+      mouseRef.current = { x: e.clientX - padding, y: e.clientY - padding };
+    };
     const onTouch = (e: TouchEvent) => {
       const t = e.touches[0];
-      if (t) mouseRef.current = { x: t.clientX, y: t.clientY };
+      if (t) {
+        const padding = window.innerWidth >= 768 ? 48 : 32;
+        mouseRef.current = { x: t.clientX - padding, y: t.clientY - padding };
+      }
     };
     const onResize = () => buildGrid();
 
@@ -231,7 +239,7 @@ export default function LoadingSplash({ onEnter }: LoadingSplashProps) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg-warm"
       onClick={handleContainerClick}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
+      <canvas ref={canvasRef} className="absolute inset-8 md:inset-12 pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center">
         {/* stopPropagation so clicking the text enters the site, not toggles seek mode */}

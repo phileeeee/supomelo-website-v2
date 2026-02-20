@@ -12,12 +12,9 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between pointer-events-none">
+      <div className="absolute bottom-6 left-6 right-6 flex items-center justify-center pointer-events-none">
         <span className="text-xs text-text-muted/40 pointer-events-auto">
-          &copy; 2026 SUPOMELO
-        </span>
-        <span className="text-xs text-text-muted/40 pointer-events-auto">
-          DESIGN STUDIO
+          &copy; 2026 SUPOMELO DESIGN STUDIO
         </span>
       </div>
     </footer>

@@ -92,11 +92,11 @@ export default function Statement() {
           </motion.p>
 
           {/* Content Card */}
-          <div className="bg-bg-warm/80 rounded-2xl overflow-hidden p-5 md:p-8">
+          <div className="bg-bg-warm/85 rounded-2xl overflow-hidden p-5 md:p-8">
             {/* Header with Title and Toggle */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
               <div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-start gap-3">
                   <motion.h3
                     key={`title-${activeTab}`}
                     initial={{ opacity: 0 }}
@@ -106,7 +106,7 @@ export default function Statement() {
                   >
                     {clientTypes[activeTab].title}
                   </motion.h3>
-                  <div className="relative group">
+                  <div className="relative group mt-2 md:mt-3 lg:mt-4">
                     <button className="w-6 h-6 rounded-full border-2 border-text-muted/40 text-text-muted/60 flex items-center justify-center text-sm font-medium hover:border-text-muted hover:text-text-muted transition-colors cursor-help">
                       i
                     </button>
@@ -158,7 +158,7 @@ export default function Statement() {
             </motion.p>
 
             {/* Offerings List */}
-            <div className="divide-y divide-gray-300">
+            <div className="divide-y divide-dotted divide-gray-300">
               {clientTypes[activeTab].offerings.map((offering, index) => (
                 <motion.div
                   key={`${activeTab}-${index}`}
