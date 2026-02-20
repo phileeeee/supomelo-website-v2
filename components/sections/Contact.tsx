@@ -20,12 +20,15 @@ const monthMap: Record<string, string> = {
   Dec: 'December',
 };
 
+const MAX_DESC = 500;
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     company: '',
     projectTypes: [] as string[],
     email: '',
+    description: '',
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,6 +94,7 @@ export default function Contact() {
           company: formData.company,
           ...(fullMonth && { availability: `${fullMonth} 2026` }),
           project_types: formData.projectTypes.join(', '),
+          ...(formData.description.trim() && { description: formData.description.trim() }),
         }),
       });
 
@@ -164,8 +168,10 @@ export default function Contact() {
             viewport={{ once: true, margin: '-100px' }}
             variants={fadeInUp}
             onSubmit={handleSubmit}
-            className="max-w-2xl"
+            className="w-full"
           >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+            {/* Left column — form fields */}
             <div className="text-base md:text-lg text-text-primary leading-relaxed space-y-4">
               <p className="flex flex-wrap items-center gap-2">
                 <span>My name is</span>
@@ -306,53 +312,78 @@ export default function Contact() {
                   } focus:border-accent outline-none px-2 py-1 text-text-primary placeholder:text-text-muted/50 transition-colors min-w-[200px]`}
                 />
               </p>
+
+              {Object.keys(errors).length > 0 && (
+                <p className="text-red-400 text-sm mt-4">
+                  {errors.submit || 'Please fill in all fields correctly.'}
+                </p>
+              )}
             </div>
 
-            {Object.keys(errors).length > 0 && (
-              <p className="text-red-400 text-sm mt-4">
-                {errors.submit || 'Please fill in all fields correctly.'}
-              </p>
-            )}
+            {/* Right column — description */}
+            <div className="flex flex-col gap-4">
+              <div>
+                <p className="text-base md:text-lg text-text-primary mb-3">
+                  Tell us a bit about your project
+                </p>
+                <div className="relative">
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => {
+                      if (e.target.value.length <= MAX_DESC) {
+                        setFormData({ ...formData, description: e.target.value });
+                      }
+                    }}
+                    placeholder="What are you building? What problem does it solve? Any context that helps us understand your goals…"
+                    rows={10}
+                    className="w-full bg-white border border-border-light focus:border-accent outline-none rounded-xl px-4 py-3 text-base text-text-primary placeholder:text-text-muted/50 transition-colors resize-none leading-relaxed"
+                  />
+                  <span className={`absolute bottom-3 right-4 text-xs tabular-nums transition-colors ${
+                    formData.description.length >= MAX_DESC
+                      ? 'text-red-400'
+                      : formData.description.length >= MAX_DESC * 0.8
+                      ? 'text-amber-500'
+                      : 'text-text-muted/50'
+                  }`}>
+                    {formData.description.length} / {MAX_DESC}
+                  </span>
+                </div>
+              </div>
 
-            <div className="mt-10">
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                className="group inline-flex items-center gap-3 bg-white text-text-primary border border-gray-200 rounded-full pl-6 pr-2 py-2 font-medium transition-all duration-300 hover:bg-text-primary hover:text-white hover:border-text-primary disabled:opacity-60 disabled:cursor-not-allowed"
-                whileTap={{ scale: 0.98 }}
-              >
-                <span className="text-base font-medium transition-colors duration-300">
-                  {isSubmitting ? 'Sending…' : 'Send message'}
-                </span>
-                <span className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#FF774D] overflow-hidden">
-                  <svg
-                    className="w-5 h-5 text-white transition-transform duration-300 ease-out group-hover:translate-x-10"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14M12 5l7 7-7 7"
-                    />
-                  </svg>
-                  <svg
-                    className="absolute w-5 h-5 text-white -translate-x-10 transition-transform duration-300 ease-out group-hover:translate-x-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14M12 5l7 7-7 7"
-                    />
-                  </svg>
-                </span>
-              </motion.button>
+              <div className="mt-2">
+                <motion.button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="group inline-flex items-center gap-3 bg-white text-text-primary border border-gray-200 rounded-full pl-6 pr-2 py-2 font-medium transition-all duration-300 hover:bg-text-primary hover:text-white hover:border-text-primary disabled:opacity-60 disabled:cursor-not-allowed"
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="text-base font-medium transition-colors duration-300">
+                    {isSubmitting ? 'Sending…' : 'Send message'}
+                  </span>
+                  <span className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#FF774D] overflow-hidden">
+                    <svg
+                      className="w-5 h-5 text-white transition-transform duration-300 ease-out group-hover:translate-x-10"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                    <svg
+                      className="absolute w-5 h-5 text-white -translate-x-10 transition-transform duration-300 ease-out group-hover:translate-x-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </motion.button>
+              </div>
+            </div>
+
             </div>
           </motion.form>
         )}
