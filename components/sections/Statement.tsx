@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const journeyStages = [
   { stage: 'Seed', description: 'Finding product-market fit' },
@@ -72,6 +72,7 @@ const clientTypes = [
 
 export default function Statement() {
   const [activeTab, setActiveTab] = useState(0);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
   return (
     <section className="bg-bg-warm">
@@ -110,16 +111,40 @@ export default function Statement() {
                     {clientTypes[activeTab].title}
                   </motion.h3>
                   <div className="relative group mt-2 md:mt-3 lg:mt-4">
-                    <button className="w-6 h-6 rounded-full border-2 border-text-muted/40 text-text-muted/60 flex items-center justify-center text-sm font-medium hover:border-text-muted hover:text-text-muted transition-colors cursor-help">
+                    <button
+                      onClick={() => setTooltipOpen(!tooltipOpen)}
+                      className="w-6 h-6 rounded-full border-2 border-text-muted/40 text-text-muted/60 flex items-center justify-center text-sm font-medium hover:border-text-muted hover:text-text-muted transition-colors cursor-pointer"
+                    >
                       i
                     </button>
-                    <div className="absolute left-0 sm:left-1/2 sm:-translate-x-1/2 top-full mt-2 w-64 p-3 bg-bg-dark text-text-light text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                      <div className="absolute left-3 sm:left-1/2 sm:-translate-x-1/2 bottom-full w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-bg-dark" />
+                    {/* Desktop tooltip — hover only */}
+                    <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 p-3 bg-bg-dark text-text-light text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                      <div className="absolute left-1/2 -translate-x-1/2 bottom-full w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-bg-dark" />
                       What we deliver also depends on your goals. Let&apos;s
                       figure it out together.
                     </div>
                   </div>
                 </div>
+
+                {/* Mobile inline card — tap to toggle */}
+                <AnimatePresence>
+                  {tooltipOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                      className="md:hidden overflow-hidden mt-2"
+                    >
+                      <div className="p-3 bg-accent/10 border border-accent/20 rounded-lg">
+                        <p className="text-sm text-text-primary">
+                          What we deliver also depends on your goals. Let&apos;s figure it out together.
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <motion.p
                   key={`subtitle-${activeTab}`}
                   initial={{ opacity: 0 }}
