@@ -323,9 +323,6 @@ export default function Contact() {
             {/* Description — left on desktop */}
             <div className="flex flex-col gap-4 lg:order-first">
               <div>
-                <p className="text-base md:text-lg text-text-primary mb-3">
-                  Tell us a bit about your project
-                </p>
                 <div className="relative">
                   <textarea
                     value={formData.description}
@@ -334,7 +331,7 @@ export default function Contact() {
                         setFormData({ ...formData, description: e.target.value });
                       }
                     }}
-                    placeholder="What are you building? What problem does it solve? Any context that helps us understand your goals…"
+                    placeholder={`Tell us a bit about your project\n\n• What are you building?\n• What problem does it solve?\n• Any context that helps us understand your goals…`}
                     rows={10}
                     className="w-full bg-white border border-border-light focus:border-accent outline-none rounded-xl px-4 py-3 text-base text-text-primary placeholder:text-text-muted/50 transition-colors resize-none leading-relaxed"
                   />
